@@ -32,8 +32,10 @@ elgg.upgrades.run = function(e) {
 	$('#upgrade-run').addClass('hidden');
 	$('#upgrade-spinner').removeClass('hidden');
 
+	var className = $('#upgrade').attr('data-class-name');
+
 	// Start upgrade with 0 errors and 0 processed
-	elgg.upgrades.upgradeBatch(0, 0);
+	elgg.upgrades.upgradeBatch(0, 0, className);
 };
 
 /**
@@ -41,11 +43,12 @@ elgg.upgrades.run = function(e) {
  *
  * @param {Number} offset  The next upgrade offset
  */
-elgg.upgrades.upgradeBatch = function(errors, processed) {
+elgg.upgrades.upgradeBatch = function(className, errors, processed) {
 	var options = {
 		data: {
+			upgrade: className,
 			errors: errors,
-                        processed: processed
+			processed: processed,
 		},
 		dataType: 'json'
 	};
@@ -96,7 +99,7 @@ elgg.upgrades.upgradeBatch = function(errors, processed) {
 			 * Start next upgrade call. Offset is the total amount of erros so far.
 			 * This prevents faulty items from causing the same error again.
 			 */
-			elgg.upgrades.upgradeBatch(errorCount, numProcessed);
+			elgg.upgrades.upgradeBatch(className, errorCount, numProcessed);
 		} else {
 			$('#upgrade-spinner').addClass('hidden');
 
